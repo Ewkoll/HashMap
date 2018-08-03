@@ -1,7 +1,7 @@
 # HashMap
 This is a thread-safe hash table. 
 
-<img src="./img/1.png"/>
+<img src="https://github.com/Ewkoll/HashMap/blob/master/Img/1.png"/>
 
 # Example Code
 
