@@ -8,6 +8,9 @@
 *  @version  0.0.0.1														
 *  @date	 2017-07-18 10:20:05
 *****************************************************************************/
+#ifndef LIST_H
+#define LIST_H
+
 #pragma once
 #include <string>
 #include <memory>
@@ -298,3 +301,5 @@ namespace HashList
 		std::shared_ptr<Node<T, HashKEY>> m_pFNode;
 	};
 }
+
+#endif

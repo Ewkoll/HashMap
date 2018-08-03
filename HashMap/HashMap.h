@@ -8,6 +8,9 @@
 *  @version  0.0.0.1														
 *  @date	 2017-07-18 10:22:53
 *****************************************************************************/
+#ifndef HASH_MAP_H
+#define HASH_MAP_H
+
 #pragma once
 #include "List.h"
 #include <mutex>
@@ -19,7 +22,7 @@ namespace HashMAP
 {
 	#define DEFAULT_HASH_MAP_INITSIZE 1024
 
-	inline size_t FNVHash(std::string& strKey)
+	inline size_t FNVHash(const std::string& strKey)
 	{
 		const char *pStrKey = strKey.c_str();
 		register size_t sizeHash = 2166136261;
@@ -31,7 +34,7 @@ namespace HashMAP
 		return sizeHash;
 	}
 
-	inline size_t HashSizeT(size_t& nKey)
+	inline size_t HashSizeT(const size_t& nKey)
 	{
 		return FNVHash(std::to_string(nKey));
 	}
@@ -56,6 +59,7 @@ namespace HashMAP
 	{
 		typedef size_t(*HashCallBack)(HashKEY&);
 		typedef void(*ReleaseCallBack)(T Data);
+		typedef bool(*RemoveCallBack)(T Data);
 	public:
 		class CVistor : public HashList::IVistor<T, HashKEY>
 		{
@@ -144,6 +148,21 @@ namespace HashMAP
 			for (std::shared_ptr<HashList::Node<T, HashKEY>> pNode : vNode)
 			{
 				bResult = RemoveNode(pNode);
+			}
+			return bResult;
+		}
+
+		bool RemoveNodeByCallBack(HashKEY Key, RemoveCallBack CallBack)
+		{
+			std::vector<std::shared_ptr<HashList::Node<T, HashKEY>>> vNode = GetKeyNode(Key);
+			bool bResult = false;
+			for (std::shared_ptr<HashList::Node<T, HashKEY>> pNode : vNode)
+			{
+				if (CallBack(pNode->GetData()))
+				{
+					bResult = RemoveNode(pNode);
+					break;
+				}
 			}
 			return bResult;
 		}
@@ -262,3 +281,5 @@ namespace HashMAP
 		std::shared_ptr<HashList::CList<T, HashKEY>> m_arrayHashData[dwInitSize];
 	};
 }
+
+#endif
